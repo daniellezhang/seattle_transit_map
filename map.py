@@ -1,6 +1,6 @@
 import geopy.distance
 import numpy as np
-from sklearn.neighbors import BallTree, KDTree
+from sklearn.neighbors import BallTree
 import pandas as pd
 from datetime import datetime
 from datetime import timedelta
