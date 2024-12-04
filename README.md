@@ -5,6 +5,13 @@ This project stems from personal frustration when trying to find a location to l
 
 The python script map.py take the commute destination's coordinate and max commute time as input, and plot all transit stops that can get to the commute destination under the max commute time onto a map and save the map into map.html.
 
+<figure>
+    <iframe src='map.html' width='100%' height='50%'></iframe>
+    <figcaption>Example map: Microsoft Studio X and all transit stops that have < 30 minutes commute to Studio X.</figcaption>
+</figure>
+
+<br>
+
 ## Methodology
 The script first finds all the transit stops around the commute destination that are under the min(MAX_WALKING_TO_STOP_TIME,max_commute_time). For each stop in the result, the script looks up all the transit routes that go through the stop and store them. Then the script find the longest trip time of each route and use them to find all the stops that can get to the commute destination under the time constraint.
 
