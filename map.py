@@ -7,14 +7,14 @@ from datetime import timedelta
 import folium
 import webbrowser
 
-# waking to stop speed: km/h
-WALKING_TO_STOP_SPEED = 4.5
+# waking to stop speed: mi/h
+WALKING_TO_STOP_SPEED = 3
 # max walking to stop time: 15 minutes
 MAX_WALKING_TO_STOP_TIME = 15 * 60
 
 def custom_distance(a, b):
-    manhattan_distance = (geopy.distance.distance((a[0], a[1]), (a[0], b[1])) + geopy.distance.distance((a[0], a[1]), (b[0], a[1]))).km
-    return manhattan_distance /4.5 * 3600
+    manhattan_distance = (geopy.distance.distance((a[0], a[1]), (a[0], b[1])) + geopy.distance.distance((a[0], a[1]), (b[0], a[1]))).miles
+    return manhattan_distance /WALKING_TO_STOP_SPEED * 3600
 
 def custom_route_id_with_direction(row):
     return row['route_id'] + "-" + str(row['direction_id'])
