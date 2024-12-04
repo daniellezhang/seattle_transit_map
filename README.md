@@ -5,14 +5,14 @@ This project stems from personal frustration when trying to find a location to l
 
 The python script map.py take the commute destination's coordinate and max commute time as input, and plot all transit stops that can get to the commute destination under the max commute time onto a map and save the map into map.html.
 
-##Methodology
+## Methodology
 The script first finds all the transit stops around the commute destination that are under the min(MAX_WALKING_TO_STOP_TIME,max_commute_time). For each stop in the result, the script looks up all the transit routes that go through the stop and store them. Then the script find the longest trip time of each route and use them to find all the stops that can get to the commute destination under the time constraint.
 
 This methodology does not consider transit commute options that require transfer. From personal experience, unfortunately transfer often adds about 15 minutes time over the estimated travel time from Google Map. Hence it is not considered in this project.
 
 When calculating the commute time, we are using the longest trip time for each route as we assume that the user is commuting during the peak traffic hour, and the longest trip time for each route occurs during the peak traffic hour too.
 
-##Setup
+## Setup
 Due to data size limitation, the transit data is not uploaded into the repository. You would need to download the data from Sound Transit into the local directory of this repository. Link to Sound Transit open transit data: https://www.soundtransit.org/help-contacts/business-information/open-transit-data-otd/otd-downloads .
 
 To customise the map for your commute destination and max commute time, put in the latitude, longitude of the commute destination, and the max commute time (minutes) into the input.txt, seperate by commas.
