@@ -24,7 +24,7 @@ List of dependencies:
 
 Due to data size limitation, the transit data is not uploaded into the repository. You would need to download the data from Sound Transit into the local directory of this repository. Link to Sound Transit open transit data: https://www.soundtransit.org/help-contacts/business-information/open-transit-data-otd/otd-downloads .
 
-To customise the map for your commute destination and max commute time, put in the latitude, longitude of the commute destination, and the max commute time (minutes) into the input.txt, seperate by commas. Then simply run [map.py](map.py). For step-by-step walkthrough, the script is also available in [jupyter notebook form](transit_map_process.ipynb).
+To customise the map for your commute destination and max commute time, put in the latitude, longitude of the commute destination, and the max commute time (minutes) into the [input.txt](input.txt), seperate by commas. Then simply run [map.py](map.py). For step-by-step walkthrough, the script is also available in [jupyter notebook form](transit_map_process.ipynb).
 
 The below are two additional constants in the script that you can adjust based on your scituation:
 * MAX_WALKING_TO_STOP_TIME: The maximum time you are willing to walk/run/bike/skateboard to the transit stop that is close to your commute destination. By default, MAX_WALKING_TO_STOP_TIME is 15 minutes.
