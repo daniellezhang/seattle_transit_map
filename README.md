@@ -3,10 +3,10 @@
 ## Overview
 This project stems from personal frustration when trying to find a location to live where we are able to commute to our work within one hour by public transit. Instead of entering address into Google Map and check how long it takes to commute to work one by one, I wanted to be able to look at a map and directly see the area that satisfies the constraint of max commute time. Luckily, Sound Transit has published transit route data from all different transit agencies in the  Puget Sound region. The open transit data is what makes this map visualisation project possible.
 
-The python script map.py take the commute destination's coordinate and max commute time as input, and plot all transit stops that can get to the commute destination under the max commute time onto a map and save the map into [map.html](map.html).
+[map.py](map.py) take the commute destination's coordinate and max commute time as input, and plot all transit stops that can get to the commute destination under the max commute time onto a map and save the map into [map.html](map.html).
 
 ![Example Map](map.jpg)
-*Example map: Microsoft Studio X and all transit stops that have < 30 minutes commute to Studio X*
+*Example map: Aloha St/Aurora Ave and all transit stops that have <60 minutes commute, with commute time pop up.*
 
 ## Methodology
 The script first finds all the transit stops around the commute destination that are under the min(MAX_WALKING_TO_STOP_TIME,max_commute_time). For each stop in the result, the script looks up all the transit routes that go through the stop and store them. Then the script find the longest trip time of each route and use them to find all the stops on the given routes that can get to the commute destination under the time constraint.

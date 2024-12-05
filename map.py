@@ -89,33 +89,36 @@ for index, row in relevant_trips.iterrows():
 
 # new df to track all the stops that satisfy the max commute time radius
 map = stops.iloc[closest_stops_indices[0]]
-map = map.rename(columns={'stop_lat': 'lat','stop_lon':'lon'})[['lat','lon']]
+map = map.rename(columns={'stop_lat': 'lat','stop_lon':'lon'})[['lat','lon','stop_id']]
 map = map.assign(time = distances[0])
 
 max_commute_time_timedelta = timedelta(seconds=max_commute_time)
 
-for i in closest_stops_indices[0]:
-    stop_id = str(stops.loc[i]["stop_id"])
-    routes = stops.loc[i]["routes"]
-    max_travel_time_for_current_destination = max_commute_time - map.loc[i]["time"]
+for i in range(len(closest_stops_indices[0])):
+    stop_id = str(stops.loc[closest_stops_indices[0][i]]["stop_id"])
+    routes = stops.loc[closest_stops_indices[0][i]]["routes"]
+    max_travel_time_for_current_destination = max_commute_time - distances[0][i]
     # traverse on the routes that go through the given stop_id
     for route in routes:
         route_info = travel_graph.loc[travel_graph["route_id_with_direction"] == route]
         stop_list = route_info["stop_list"].values[0]
         arrival_time_list = route_info["arrival_time_list"].values[0]
-        current_stop = stop_list[0]
         travel_start_time = arrival_time_list[0]
         destination_stop_index = stop_list.index(stop_id)
         for x in range(0, destination_stop_index):
             travel_time = (arrival_time_list[destination_stop_index] - arrival_time_list[x]).total_seconds()
             if travel_time > 0 and travel_time < max_travel_time_for_current_destination:
-                lat = stops.loc[stops["stop_id"]==stop_list[x]]["stop_lat"].values[0]
-                lon = stops.loc[stops["stop_id"]==stop_list[x]]["stop_lon"].values[0]
-                time = travel_time
-                map.loc[-1] = [lat, lon,time]
+                time = travel_time + distances[0][i]
+                if stop_list[x] not in map['stop_id'].values:
+                    lat = stops.loc[stops["stop_id"]==stop_list[x]]["stop_lat"].values[0]
+                    lon = stops.loc[stops["stop_id"]==stop_list[x]]["stop_lon"].values[0]
+                    new_row = {"lat": lat, "lon": lon, "time": time, "stop_id": stop_list[x]}
+                    map = map._append(new_row, ignore_index=True)
+                elif map.loc[map["stop_id"]==stop_list[x]]["time"].values[0] > time:
+                    map.loc[map["stop_id"]==stop_list[x]]["time"].values[0] = time
 
 # creating final map using folium
-final_map = folium.Map(location=(destination_lat, destination_lon), zoom_start=10)#location - the center of the map, zoom_start - the resolution
+final_map = folium.Map(location=(destination_lat, destination_lon), zoom_start=12)#location - the center of the map, zoom_start - the resolution
 
 fg = folium.FeatureGroup(name="Stops")
 for index, row in map.iterrows():
@@ -128,7 +131,7 @@ for index, row in map.iterrows():
             fill=True,
             fill_opacity=0.6,
             opacity=1,
-            popup=(folium.Popup("Transit stops")),
+            popup=(folium.Popup("Travel time in minutes:" + str(row['time']/60))),
         )
     )
 
