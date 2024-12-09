@@ -54,19 +54,22 @@ trips = pd.read_csv("./gtfs_puget_sound_consolidated/trips.txt", low_memory=Fals
 trips = trips[["route_id", "trip_id", "direction_id"]]
 
 stop_times = pd.DataFrame(columns=["trip_id", "stop_id", "arrival_time"])
-# process stop_times by chunks to construct a graph. Only get data relevant to the starting stops.
+# process stop_times by chunks to get all relevant trips to the starting stops. Only get data relevant to the starting stops.
 chunksize = 10 ** 6
 with pd.read_csv("./gtfs_puget_sound_consolidated/stop_times.txt", chunksize=chunksize, low_memory=False) as reader:
     for chunk in reader:
-        # chunk is a DataFrame. To "process" the rows in the chunk:
-        chunk = chunk[["trip_id", "stop_id", "arrival_time"]]
-        chunk["arrival_time"]= pd.to_timedelta(chunk["arrival_time"])
         unique_trip_id_set = set(chunk.query('stop_id in @stop_set')["trip_id"])
         chunk_relevant_trips = trips.query('trip_id in @unique_trip_id_set')
-        chunk = chunk.query('trip_id in @unique_trip_id_set')
-        stop_times = pd.concat([stop_times, chunk])
         relevant_trips = pd.concat([relevant_trips, chunk_relevant_trips])
 
+# process stop_times by chunks to construct a graph. Only get data relevant to the starting stops.
+unique_trip_id_set = set(relevant_trips["trip_id"])
+with pd.read_csv("./gtfs_puget_sound_consolidated/stop_times.txt", chunksize=chunksize, low_memory=False) as reader:
+    for chunk in reader:
+        chunk = chunk[["trip_id", "stop_id", "arrival_time"]]
+        chunk["arrival_time"]= pd.to_timedelta(chunk["arrival_time"])
+        chunk = chunk.query('trip_id in @unique_trip_id_set')
+        stop_times = pd.concat([stop_times, chunk])
 relevant_trips['route_id_with_direction'] = relevant_trips.apply(custom_route_id_with_direction, axis=1)
 
 # build a new df for route information and max route traveling stop-to-stop time
